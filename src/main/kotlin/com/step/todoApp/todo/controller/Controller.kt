@@ -3,7 +3,9 @@ package com.step.todoApp.todo.controller
 import com.step.todoApp.todo.Task
 import com.step.todoApp.todo.Todo
 import com.step.todoApp.todo.TodoList
+import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
+import org.springframework.web.server.ResponseStatusException
 
 @RestController
 @RequestMapping("/todos")
@@ -33,7 +35,11 @@ class Controller {
 
     @GetMapping("/{todoId}")
     fun readTasks(@PathVariable todoId: Int): ArrayList<Task> {
-        return TodoList.getAllTasks(todoId)
+        try {
+            return TodoList.getAllTasks(todoId)
+        } catch (e: Exception) {
+            throw ResponseStatusException(HttpStatus.NOT_FOUND, "Todo not found")
+        }
     }
 
     @PostMapping("/{todoId}/tasks")
